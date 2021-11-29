@@ -133,6 +133,9 @@
                 <h3>Products</h3>
             </li>
             <li>
+                <a href="{{route('assets')}}">Asset Types</a>
+            </li> 
+            <li>
                 <a href="{{route('categories')}}">Category</a>
             </li> 
             <li>
@@ -141,9 +144,7 @@
             <li>
                 <a href="{{route('items')}}">Item</a>
             </li> 
-            <li>
-                <a href="{{route('assets')}}">Asset Types</a>
-            </li>                    
+                               
         </ul>
 
 

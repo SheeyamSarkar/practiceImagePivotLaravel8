@@ -94,7 +94,7 @@
                 <div class="modal-body">
                     <div class="row">
                     	<div class="col-12 form-input">
-                            <label for="category_id">Skill Category</label>
+                            <label for="category_id">Category</label>
                             <select name="category_id" id="category_id" class="form-control">
 								<option value="">Select</option>
                                 @if(!empty($categories))
@@ -146,7 +146,7 @@
                     <input type="hidden" id="hidden_id" name="hidden_id" value="">
                     <div class="row">
                     	<div class="col-12 form-input">
-                            <label for="category_id">Skill Category</label>
+                            <label for="category_id">Category</label>
                             <select name="category_id" id="e_category_id" class="form-control">
 								<option value="">Select</option>
                                 @if(!empty($categories))

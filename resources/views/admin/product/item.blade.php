@@ -26,7 +26,7 @@
                                         	<th scope="col">Category Name</th>
                                             <th scope="col">Sub Category Name</th>
                                         	<th scope="col">Item Name</th>
-                                            <!-- <th scope="col">Asset Type</th> -->
+                                            <th scope="col">Asset</th>
                                             
                                             <th scope="col">Description</th>
                                             <th scope="col" class="text-center">Actions</th>
@@ -45,6 +45,12 @@
 
                                         <td>{{$item->getSubCategory?$item->getSubCategory->name:'N/A'}}</td>
                                         <td>{{$item->name}}</td>
+                                        <td>
+                                            @foreach($item->assets as $aset)
+                                            <img src="{{asset('images/'.$aset->pivot->asset)}}" alt="item Image" style="height: 40px;width: 40px">
+                                            @endforeach
+                                        </td>
+
                                         
                                         <td>{{$item->description}}</td>
 
@@ -163,8 +169,6 @@
                             </div>
                         </div>
 
-
-
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -261,7 +265,7 @@
                             <label>Image3 (max:1.5 MB) (image3 size: 200x200)</label>
                             <div class="custom-file big_image">
                                 <div class="col-md-8 offset-2">
-                                    <input type="file" id="asset2" name="e_asset2" class="custom-file-input dropify" data-errors-position="outside" data-allowed-file-extensions='["jpg","jpeg", "png"]' data-max-file-size="1.5M" data-height="200" data-width="200">
+                                    <input type="file" id="asset2" name="e_asset2" class="custom-file-input dropify1" data-errors-position="outside" data-allowed-file-extensions='["jpg","jpeg", "png"]' data-max-file-size="1.5M" data-height="200" data-width="200">
                                 </div>
                             </div>
                         </div>
@@ -492,7 +496,7 @@
     });
 
     //request end
-    var path = "{{ url('/') }}" + '/images/';
+    //var path = "{{ url('/') }}" + '/images/';
     function viewItem(id) {
 
         $.ajax({
@@ -505,17 +509,17 @@
             dataType: "json",
             success: function(response) {
                 if (response.success == true) {
-                    var photo_url = path + response.data.asset;
+                    //var image_url = path + response.data.img_path;
 
                     
                     $('#v_category_id').text(response.data.category_name);
                     $('#v_sub_category_id').text(response.data.get_sub_category.name);
                     $('#v_name').text(response.data.name);
-                    $('#v_asset_type_id').text(response.data.asset_type_id);
-                    $.each(response.data, function(key, value) {
-                            console.log(3);
-                        });
-                    $("#v_asset").attr("src", response.data.asset);
+                    $('#v_asset_type_id').text(response.data.type_name);
+                    //$("#v_asset").attr( response.data.img_path);
+                    $('#v_asset').html(`<img width="40px" height="40px" src="{!!URL::to('images/')!!}/${response.data.img_path}" class="dropify"/>`);
+                    $('#v_asset1').html(`<img width="40px" height="40px" src="{!!URL::to('images/')!!}/${response.data.img_path1}" class="dropify"/>`);
+                    $('#v_asset2').html(`<img width="40px" height="40px" src="{!!URL::to('images/')!!}/${response.data.img_path2}" class="dropify"/>`);
                     $('#v_description').text(response.data.description);
                     
                     $('#itemViewModal').modal('show');
@@ -546,25 +550,68 @@
                     $('#e_sub_category_id').val(response.data.sub_category_id);
                     $('#name').val(response.data.name);
                     //$('#e_asset_type_id').val(response.data.asset_type_id);
-                    $('#e_asset_type_id').val(response.data.assets.name);
+                    $('#e_asset_type_id').val(response.data.type_name);
                     $('#description').val(response.data.description);
-                    
-                    $('#hidden_id').val(response.data.id);
-                    $('#itemEditModal').modal('show');
 
-                    if (response.data.asset) {
-                        var photo_url = path + response.data.asset;
-                        //alert(photo_url)
+                    /*if (response.data.img_path) {
+                        var image_url = path + response.data.img_path;
+                        //alert(image_url)
                         $("#e_asset").attr("data-height", 100);
-                        $("#e_asset").attr("data-default-file", photo_url);
+                        $("#e_asset").attr("data-default-file", image_url);
 
                         $('.big_image').find('.dropify-wrapper').removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
                         $('.big_image').find(".dropify-preview").css('display', 'block');
-                        $('.big_image').find('.dropify-render').html('').html('<img src=" ' + photo_url +
+                        $('.big_image').find('.dropify-render').html('').html('<img src=" ' + image_url +
                             '">')
                     } else {
                         $('#e_asset').find(".dropify-preview .dropify-render img").attr("src", "");
-                    }
+                    }*/
+
+                    if(response.data.img_path){
+                          var image_url = path+'/'+response.data.img_path;
+
+                       $("#e_asset").attr("data-height", 200);
+                       $("#e_asset").attr("data-default-file",image_url);
+
+                       $(".dropify-wrapper").removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
+                       $(".dropify-preview").css('display','block');
+                       $('.dropify-render').html('').html('<img src=" '+image_url+'" style="max-height: 200px;">')
+                    }else{
+                       $(".dropify-preview .dropify-render img").attr("src","");
+                      }
+                      $('#e_asset').dropify();
+
+
+                    if(response.data.img_path1){
+                          var image_url = path+'/'+response.data.img_path1;
+
+                       $("#e_asset1").attr("data-height", 200);
+                       $("#e_asset1").attr("data-default-file",image_url);
+
+                       $(".dropify-wrapper").removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
+                       $(".dropify-preview").css('display','block');
+                       $('.dropify-render').html('').html('<img src=" '+image_url+'" style="max-height: 200px;">')
+                    }else{
+                       $(".dropify-preview .dropify-render img").attr("src","");
+                      }
+                      $('#e_asset1').dropify();
+
+                    if(response.data.img_path2){
+                          var image_url = path+'/'+response.data.img_path2;
+
+                       $("#e_asset2").attr("data-height", 200);
+                       $("#e_asset2").attr("data-default-file",image_url);
+
+                       $(".dropify-wrapper").removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
+                       $(".dropify-preview").css('display','block');
+                       $('.dropify-render').html('').html('<img src=" '+image_url+'" style="max-height: 200px;">')
+                    }else{
+                       $(".dropify-preview .dropify-render img").attr("src","");
+                      }
+                      $('#e_asset2').dropify();  
+                    
+                    $('#hidden_id').val(response.data.id);
+                    $('#itemEditModal').modal('show');
 
                 }
 
@@ -589,10 +636,12 @@
                         $('.item' + response.data.id).replaceWith(`<tr class='item${response.data.id}'>
                             <td>${response.data.category_id}</td>
                             <td>${response.data.sub_category_id}</td>
-                            <td>${response.data.name}</td>
+                           
                             <td>${response.data.asset_type_id}</td>
                             <td>${response.data.description}</td>
-                            <td><img class="img-fluid" src="${path+'/'+response.data.asset}" style='width: 60px; height: 55px;'></td>
+                            <td><img class="img-fluid" src="${path +'/'+response.data.img_path}" style="width: 40px; height: 40px;"></td>
+                            <td><img class="img-fluid" src="${path +'/'+response.data.img_path1}" style="width: 40px; height: 40px;"></td>
+                            <td><img class="img-fluid" src="${path +'/'+response.data.img_path2}" style="width: 40px; height: 40px;"></td>
                             <td class="actionBtn text-center">
                             <button  onclick='viewItem(${response.data.id})'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="#BDBDBD" d="M21.92 11.6C19.9 6.91 16.1 4 12 4s-7.9 2.91-9.92 7.6a1 1 0 000 .8C4.1 17.09 7.9 20 12 20s7.9-2.91 9.92-7.6a1 1 0 000-.8zM12 18c-3.17 0-6.17-2.29-7.9-6C5.83 8.29 8.83 6 12 6s6.17 2.29 7.9 6c-1.73 3.71-4.73 6-7.9 6zm0-10a4 4 0 100 8 4 4 0 000-8zm0 6a2 2 0 110-4 2 2 0 010 4z" /></svg>
                             </button>

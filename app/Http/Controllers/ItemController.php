@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\AssetType;
+use App\Models\AssetItem;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,6 +25,7 @@ class ItemController extends Controller
         //dd($items);
         //$catname= Category::where('id','=',$cid)->get();
         //dd($catname);
+        //dd($items);
         $catid=[];
         foreach ($items as  $item) {
             $description  = substr($item->description, 0, 25);
@@ -36,6 +38,7 @@ class ItemController extends Controller
             foreach ($itemcatname as  $itemcat) {
                    //dd($itemcat->name);
                 $item->catname = $itemcat->name;
+                //$item->new_img = 'product/1717665803368407.png';
 
                 }
         }
@@ -152,16 +155,27 @@ class ItemController extends Controller
         //dd($request->id);
         $item = Item::with('getSubCategory','assets')->find($request->id);
         //dd($item);
+        //$assetname = $item->assets;
+        foreach ($item->assets as  $item1) {
+                $typename= $item1->name;
+                $imgpath[]= $item1->pivot->asset;
+                //dd($imgpath);
+            }
+        //dd($imgpath);
         $cid= $item->getSubCategory->category_id;
         //dd($cid);
         $catname= Category::where('id','=',$cid)->first();
         //dd($catname->name);
         $item['category_name']=$catname->name;
+        $item['img_path']=$imgpath[0];
+        $item['img_path1']=$imgpath[1];
+        $item['img_path2']=$imgpath[2];
+        $item['type_name']=$typename;
+
         if ($item) {
             return response()->json([
                 'success' => true,
                 'data'    => $item,
-
             ]);
         } else {
             return response()->json([
@@ -174,8 +188,7 @@ class ItemController extends Controller
     public function itemUpdate(Request $request)
     {
         //dd($request->all());
-        
-        
+
         $validator = Validator::make($request->all(), [
             
             'name'       => 'required|max:100',
@@ -188,21 +201,28 @@ class ItemController extends Controller
                 'data'    => $data,
             ]);
         } else {
+            //$item  = Item::find($request->hidden_id);
             $item  = Item::with('assets')->find($request->hidden_id);
-            dd($item);
+            //$img=[];
+            foreach ($item->assets as  $item1) {
+                $img[]= $item1->pivot->asset;
+                //dd($img);
+            }
+            //dd($img);
+
             $item['sub_category_id'] = $request->sub_category_id;
-            $item['name']         = $request->name;
-            $item['description']  = $request->description;
+            $item['name']            = $request->name;
+            $item['description']     = $request->description;
             $item->update();
 
 
             $asset_type= $request->e_asset_type_id;
-            $image = $request->e_asset;
+            $image  = $request->e_asset;
             $image1 = $request->e_asset1;
             $image2 = $request->e_asset2;
-            dd($image);
+            //dd($image);
             if ($image) {
-                File::delete($item->asset);
+                File::delete($img);
                 $image_name = hexdec(uniqid());
                 $image_ext  = strtolower($image->getClientOriginalExtension());
 
@@ -211,6 +231,8 @@ class ItemController extends Controller
                 $image_upload_path3    = 'images/product/';
                 $image_url       = $image_upload_path2 . $image_full_name;
                 $success        = $image->move($image_upload_path3, $image_full_name);
+            }else {
+                $image_url = $img;
             }
 
             if ($image1) {
@@ -223,6 +245,8 @@ class ItemController extends Controller
                 $image_upload_path5    = 'images/product/';
                 $image1_url       = $image_upload_path4 . $image1_full_name;
                 $success        = $image1->move($image_upload_path5, $image1_full_name);
+            }else {
+                $image1_url = $img;
             }
 
             if ($image2) {
@@ -233,13 +257,13 @@ class ItemController extends Controller
                 $image2_full_name = $image2_name . '.' . $image2_ext;
                 $image_upload_path6     = 'product/';
                 $image_upload_path7    = 'images/product/';
-                $image2_url       = $image_upload_path4 . $image2_full_name;
-                $success        = $image2->move($image_upload_path5, $image2_full_name);
+                $image2_url       = $image_upload_path6 . $image2_full_name;
+                $success        = $image2->move($image_upload_path7, $image2_full_name);
+            }else {
+                $image2_url = $img;
             }
 
 
-
-            //$pics=['1','1','1'];
             $pics=[$image_url,$image1_url,$image2_url];
             //dd($pics);
 
@@ -250,7 +274,7 @@ class ItemController extends Controller
                 ]]);
                 }
             }
-            dd($pic);
+            //dd($pic);
 
 
             //dd($item);
@@ -261,7 +285,9 @@ class ItemController extends Controller
            // $data['name']     = $assets->name;
             $data['description']=substr($item->description, 0, 25);
             $data['asset_type_id']=$asset_type;
-            $data['asset']       = $pics;
+            // $data['asset']       = $pics[0];
+            // $data['asset1']       = $pics[1];
+            // $data['asset2']       = $pics[2];
             $data['id']          = $request->hidden_id;
 
             return response()->json([

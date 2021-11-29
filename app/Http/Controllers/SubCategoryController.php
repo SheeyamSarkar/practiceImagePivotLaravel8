@@ -114,7 +114,7 @@ class SubCategoryController extends Controller
             //dd($subcategory);
             $data                = array();
             $data['message']     ='SubCategory updated successfully';
-            $data['category_id']  = $subcategory->get_category->name;
+            $data['category_id']  = $subcategory->getCategory->name;
             $data['name']       = $subcategory->name;
             $data['description']=substr($subcategory->description, 0, 25);
             $data['id']          = $request->hidden_id;
