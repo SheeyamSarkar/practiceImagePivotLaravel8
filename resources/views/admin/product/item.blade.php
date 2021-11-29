@@ -245,7 +245,7 @@
                          <!-- Image 1 -->
                         <div class="col-4 form-input">
                             <label>Image1 (max:1.5 MB) (image1 size: 200x200)</label>
-                            <div class="custom-file big_image">
+                            <div class="custom-file big_image1">
                                 <div class="col-md-8 offset-2">
                                     <input type="file" id="asset" name="e_asset" class="custom-file-input dropify" data-errors-position="outside" data-allowed-file-extensions='["jpg","jpeg", "png"]' data-max-file-size="1.5M" data-height="200" data-width="200">
                                 </div>
@@ -254,7 +254,7 @@
                         <!-- Image 2 -->
                         <div class="col-4 form-input">
                             <label>Image2 (max:1.5 MB) (image2 size: 200x200)</label>
-                            <div class="custom-file big_image">
+                            <div class="custom-file big_image2">
                                 <div class="col-md-8 offset-2">
                                     <input type="file" id="asset1" name="e_asset1" class="custom-file-input dropify" data-errors-position="outside" data-allowed-file-extensions='["jpg","jpeg", "png"]' data-max-file-size="1.5M" data-height="200" data-width="200">
                                 </div>
@@ -263,9 +263,9 @@
                         <!-- Image 3 -->
                         <div class="col-4 form-input">
                             <label>Image3 (max:1.5 MB) (image3 size: 200x200)</label>
-                            <div class="custom-file big_image">
+                            <div class="custom-file big_image3">
                                 <div class="col-md-8 offset-2">
-                                    <input type="file" id="asset2" name="e_asset2" class="custom-file-input dropify1" data-errors-position="outside" data-allowed-file-extensions='["jpg","jpeg", "png"]' data-max-file-size="1.5M" data-height="200" data-width="200">
+                                    <input type="file" id="asset2" name="e_asset2" class="custom-file-input dropify" data-errors-position="outside" data-allowed-file-extensions='["jpg","jpeg", "png"]' data-max-file-size="1.5M" data-height="200" data-width="200">
                                 </div>
                             </div>
                         </div>
@@ -328,7 +328,6 @@
         </div>
     </div>
 </div>
-
 
 
 @endsection
@@ -510,7 +509,6 @@
             success: function(response) {
                 if (response.success == true) {
                     //var image_url = path + response.data.img_path;
-
                     
                     $('#v_category_id').text(response.data.category_name);
                     $('#v_sub_category_id').text(response.data.get_sub_category.name);
@@ -553,62 +551,46 @@
                     $('#e_asset_type_id').val(response.data.type_name);
                     $('#description').val(response.data.description);
 
-                    /*if (response.data.img_path) {
+                    if (response.data.img_path) {
                         var image_url = path + response.data.img_path;
                         //alert(image_url)
                         $("#e_asset").attr("data-height", 100);
                         $("#e_asset").attr("data-default-file", image_url);
 
-                        $('.big_image').find('.dropify-wrapper').removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
-                        $('.big_image').find(".dropify-preview").css('display', 'block');
-                        $('.big_image').find('.dropify-render').html('').html('<img src=" ' + image_url +
+                        $('.big_image1').find('.dropify-wrapper').removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
+                        $('.big_image1').find(".dropify-preview").css('display', 'block');
+                        $('.big_image1').find('.dropify-render').html('').html('<img src=" ' + image_url +
                             '">')
                     } else {
                         $('#e_asset').find(".dropify-preview .dropify-render img").attr("src", "");
-                    }*/
+                    }
+                    if (response.data.img_path1) {
+                        var image1_url = path + response.data.img_path1;
+                        //alert(image1_url)
+                        $("#e_asset1").attr("data-height", 100);
+                        $("#e_asset1").attr("data-default-file", image1_url);
 
-                    if(response.data.img_path){
-                          var image_url = path+'/'+response.data.img_path;
+                        $('.big_image2').find('.dropify-wrapper').removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
+                        $('.big_image2').find(".dropify-preview").css('display', 'block');
+                        $('.big_image2').find('.dropify-render').html('').html('<img src=" ' + image1_url +
+                            '">')
+                    } else {
+                        $('#e_asset1').find(".dropify-preview .dropify-render img").attr("src", "");
+                    }
 
-                       $("#e_asset").attr("data-height", 200);
-                       $("#e_asset").attr("data-default-file",image_url);
+                    if (response.data.img_path2) {
+                        var image2_url = path + response.data.img_path2;
+                        //alert(image2_url)
+                        $("#e_asset2").attr("data-height", 100);
+                        $("#e_asset2").attr("data-default-file", image2_url);
 
-                       $(".dropify-wrapper").removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
-                       $(".dropify-preview").css('display','block');
-                       $('.dropify-render').html('').html('<img src=" '+image_url+'" style="max-height: 200px;">')
-                    }else{
-                       $(".dropify-preview .dropify-render img").attr("src","");
-                      }
-                      $('#e_asset').dropify();
-
-
-                    if(response.data.img_path1){
-                          var image_url = path+'/'+response.data.img_path1;
-
-                       $("#e_asset1").attr("data-height", 200);
-                       $("#e_asset1").attr("data-default-file",image_url);
-
-                       $(".dropify-wrapper").removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
-                       $(".dropify-preview").css('display','block');
-                       $('.dropify-render').html('').html('<img src=" '+image_url+'" style="max-height: 200px;">')
-                    }else{
-                       $(".dropify-preview .dropify-render img").attr("src","");
-                      }
-                      $('#e_asset1').dropify();
-
-                    if(response.data.img_path2){
-                          var image_url = path+'/'+response.data.img_path2;
-
-                       $("#e_asset2").attr("data-height", 200);
-                       $("#e_asset2").attr("data-default-file",image_url);
-
-                       $(".dropify-wrapper").removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
-                       $(".dropify-preview").css('display','block');
-                       $('.dropify-render').html('').html('<img src=" '+image_url+'" style="max-height: 200px;">')
-                    }else{
-                       $(".dropify-preview .dropify-render img").attr("src","");
-                      }
-                      $('#e_asset2').dropify();  
+                        $('.big_image3').find('.dropify-wrapper').removeClass("dropify-wrapper").addClass("dropify-wrapper has-preview");
+                        $('.big_image3').find(".dropify-preview").css('display', 'block');
+                        $('.big_image3').find('.dropify-render').html('').html('<img src=" ' + image2_url +
+                            '">')
+                    } else {
+                        $('#e_asset2').find(".dropify-preview .dropify-render img").attr("src", "");
+                    }
                     
                     $('#hidden_id').val(response.data.id);
                     $('#itemEditModal').modal('show');
@@ -660,7 +642,6 @@
                                 timer: 1500
                             })
                             $('#itemEditForm').trigger('reset');
-
                         }
 
                     } else {

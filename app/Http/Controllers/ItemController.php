@@ -222,7 +222,7 @@ class ItemController extends Controller
             $image2 = $request->e_asset2;
             //dd($image);
             if ($image) {
-                File::delete($img);
+                File::delete($img[0]);
                 $image_name = hexdec(uniqid());
                 $image_ext  = strtolower($image->getClientOriginalExtension());
 
@@ -236,7 +236,7 @@ class ItemController extends Controller
             }
 
             if ($image1) {
-
+                File::delete($img[1]);
                 $image1_name = hexdec(uniqid());
                 $image1_ext  = strtolower($image1->getClientOriginalExtension());
 
@@ -250,7 +250,7 @@ class ItemController extends Controller
             }
 
             if ($image2) {
-
+                File::delete($img[1]);
                 $image2_name = hexdec(uniqid());
                 $image2_ext  = strtolower($image2->getClientOriginalExtension());
 
