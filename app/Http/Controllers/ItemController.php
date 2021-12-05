@@ -15,11 +15,12 @@ class ItemController extends Controller
 {
     public function allItem()
     {
+        
         $items = Item::with('getSubCategory', 'assets')->get();
         $subcategories = SubCategory::all();
         $categories = Category::all();
         $assets = AssetType::all();
-
+        
         $catid = [];
         
         foreach ($items as  $item) {
@@ -35,12 +36,14 @@ class ItemController extends Controller
                 $item->catname = $itemcat->name;
 
             }
+            
             //Image Fetch
             foreach($item->assets as $assets_pivot){
                $image_path=$assets_pivot->pivot->asset;
             }
             $item['image_path']=$image_path;
         }
+        //dd($item->catname);
         //dd($item);
 
 
@@ -138,7 +141,7 @@ class ItemController extends Controller
         $catname = Category::where('id', '=', $cid)->first();
 
         $image_infos=AssetItem::where('item_id',$request->id)->get();
-        dd($image_infos);
+        //dd($image_infos);
         $item['category_name'] = $catname->name;
         $item['type_name'] = $typename;
         $item['type_id'] = $typeid;
@@ -184,6 +187,7 @@ class ItemController extends Controller
                 $item['image']= $items->pivot->asset;
                 $abc[]=$item['image'];
             }
+            //dd($abc);
 
             $asset_type = $request->asset_type_id;
             $images=[];
@@ -200,19 +204,20 @@ class ItemController extends Controller
                 }
             }
 
-           if($request->edit_photo!=null){
-            foreach ($images as $pic) {
-                $array[$pic] = [
-                    'asset'         => $pic,
-                    'asset_type_id' => $asset_type,
-                ];
-            }
+            if($request->edit_photo!=null){
+                foreach ($images as $pic) {
+                    $array[$pic] = [
+                        'asset'         => $pic,
+                        'asset_type_id' => $asset_type,
+                    ];
+                }
             
-            $item->assets()->sync($array);
+                // $item->assets()->sync($array);
+                $item->assets()->attach($array);
 
-           }else{
-            $images=$abc;
-           }
+            }else{
+                $images=$abc;
+            }
     
 
            $itemcatname = Category::where('id', $request->category_id)->get();

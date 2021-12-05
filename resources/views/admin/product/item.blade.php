@@ -29,7 +29,6 @@
                                                 <th scope="col">Sub Category Name</th>
                                                 <th scope="col">Item Name</th>
                                                 <th scope="col">Asset</th>
-
                                                 <th scope="col">Description</th>
                                                 <th scope="col" class="text-center">Actions</th>
                                             </tr>
@@ -164,14 +163,14 @@
                                     <div class=' row image_row image_div0'>
                                         <div class="col-10 form-input">
                                             <label for="add_photo">Image</label>
-                                            <div class="custom-file program_image0">
-                                                <input type="file" name="add_photo[]" id="add_photo"
-                                                    class="custom-file-input dropify" data-errors-position="outside"
-                                                    data-allowed-file-extensions='["jpg", "png","jpeg"]'
+                                            <div class="custom-file error0 program_image0">
+                                                <input type="file" name="add_photo[]" id="add_photo0"
+                                                    class="custom-file-input error0 dropify" data-errors-position="outside"
+                                                    data-allowed-file-extensions='["jpg", "png","jpeg","svg"]'
                                                     data-max-file-size="1.0M" data-height="200" data-width="200"
                                                     data-id='0'>
                                             </div>
-                                            <span class="error_msg0 text-danger"></span>
+                                            <span class="error_msg0 text-danger" style="font-size: 1.8rem;"></span>
                                         </div>
                                         <div class="col-2 form-input">
                                             <div class=" remove_row0" onclick="remove(0)" style="padding-top:20px;">
@@ -302,7 +301,6 @@
 
                             <!-- Edit Image Input Field End -->
 
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -401,29 +399,25 @@
         // While adding new data this code will generate new row
         var i = 0;
         $(document).on('click', '.add_new_row_btn1', function() {
-
-
             var image = $('.image_row').find('#add_photo' + i).val();
-
+            //alert(i);
             if (image === '') {
-
+                //alert(i);
                 $('.error_msg' + i).addClass('mt-1').text('This field is required');
                 $('.error_msg' + i).show();
             } else {
                 ++i;
                 var new_i = i - 1;
                 $('.error_msg' + new_i).hide();
-
+                //alert('Test');
                 $('.image_row:last').after(` <div class='row image_row image_div${i}' >
                 <div class="col-10 form-input">
-                    <div class="custom-file program_image${i}">
-                        <input type="file" name="add_photo[]" id="add_photo${i}" class="custom-file-input dropify"
-                            data-errors-position="outside" data-allowed-file-extensions='["jpg", "png","jpeg"]'
+                    <div class="custom-file error${i} program_image${i}">
+                        <input type="file" name="add_photo[]" id="add_photo${i}" class="custom-file-input error${i} dropify"
+                            data-errors-position="outside" data-allowed-file-extensions='["jpg", "png","jpeg","svg"]'
                             data-max-file-size="1.0M" data-height="200" data-width="200" data-id='${i}'>
                     </div>
-                    
-                    
-                <span class="error_msg${i} text-danger"></span>
+                <span class="error_msg${i} text-danger" style="font-size: 1.8rem;"></span>
                 </div>
                 <div class="col-2 form-input">
                     <div class=" remove_row${i}" onclick="remove(${i})" style="position: absolute; right: 0; padding-top:20px;">
@@ -435,12 +429,9 @@
                     </div>
                 </div>
             </div>`);
-                $('.program_image' + i).dropify();
+                $('#add_photo' + i).dropify();
             }
-
         });
-
-
 
         // While adding new data this code will remove new row
         function remove(id) {
@@ -453,11 +444,7 @@
             }
         }
 
-
-
         /*Edit Image Input Field End*/
-        // While editing existing data this code will generate new row after click add button
-
         // While editing existing data this code will generate new row after click add button if you necessary
         var j = 0;
         $(document).on('click', '.add_new_row_btn_image_edit', function() {
@@ -465,7 +452,6 @@
             var image = $('.image_row_edit').find('#edit_photo' + j).val();
 
             if (image === '') {
-
                 $('.error_msg' + j).addClass('mt-1').text('This field is required');
                 $('.error_msg' + j).show();
             } else {
@@ -476,17 +462,14 @@
 
                 $('.image_row_edit:last').after(` <div class=' row image_row_edit image_edit_new${j}' >
                 <div class="col-10 form-input">
-                <div class="custom-file program_image${j}">
-                                            <input type="file" name="edit_photo[]" id="edit_photo${j}"
-                                                class="custom-file-input dropify" data-errors-position="outside"
-                                                data-allowed-file-extensions='["jpg", "png","jpeg"]'
-                                                data-max-file-size="1.0M" data-height="200" data-width="200"
-                                                data-id='${j}'>
-                                        </div>
-                    
-
-
-                    <span class="error_msg${j} text-danger"></span>
+                    <div class="custom-file program_image${j}">
+                        <input type="file" name="edit_photo[]" id="edit_photo${j}"
+                            class="custom-file-input dropify" data-errors-position="outside"
+                            data-allowed-file-extensions='["jpg", "png","jpeg","svg"]'
+                            data-max-file-size="1.0M" data-height="200" data-width="200"
+                            data-id='${j}'>
+                    </div>
+                    <span class="error_msg${j} text-danger" style="font-size: 1.8rem;"></span>
                 </div>
                 <div class="col-2 form-input">
                     <div class=" remove_row${j}" onclick="remove_image_edit_row(${j})" style="position: absolute; right: 0; padding-top:20px;">
@@ -498,7 +481,7 @@
                     </div>
                 </div>
             </div>`);
-                $('.program_image' + j).dropify();
+                $('#edit_photo' + j).dropify();
             }
         });
 
@@ -542,6 +525,9 @@
                         required: true,
                         maxlength: 100,
                     },
+                    // 'add_photo[]': {
+                    //     required: true,
+                    // },
                 },
                 messages: {
                     category_id: {
@@ -553,6 +539,9 @@
                     name: {
                         required: 'Please Insert Name',
                     },
+                    // 'add_photo[]': {
+                    //     required: 'Please Insert Image',
+                    // },
                 },
                 errorPlacement: function(label, element) {
                     label.addClass('mt-2 text-danger');
@@ -678,7 +667,7 @@
                         $.each(response.data.Image_assets, function(key, value) {
                             $('#v_asset').append(
                                 `<img src="${path+value.asset}" class="dropify" style="width:370px; height:200px; padding-bottom:10px;"/>`
-                                );
+                            );
                         });
                         $('#v_description').text(response.data.description);
 
@@ -718,13 +707,12 @@
 
                         /*Edit Image Start  deleteimagerow()*/
                         $('#e_select_image_div').empty();
-                         $.each(response.data.Image_assets, function(key, value) {
-                        
+                        $.each(response.data.Image_assets, function(key, value) {
+
                             $('#e_select_image_div').append(`<div class=' row image_row_edit image_div_edit${key}' >
                             
-                            <img src="${path+value.asset}" class="dropify"style="width:370px; height:200px; padding-bottom:10px;"/>
+                            <img src="${path+value.asset}" class="dropify" style="width:370px; height:200px; padding-bottom:10px;"/>
                             <div class="col-2 form-input">
-
                                 <div class=" remove_row${value.id}" onclick="remove_image_edit(${key})" style="position: absolute; right: 0; padding-top:20px;">
                                     <button onclick="deleteimagerow(${value.id})" class="btn btn-secondary close_icon_add_form" type="button">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
@@ -733,49 +721,9 @@
                                 </div>
                             </div>
                         </div>`);
-                        $('.program_image' + key).dropify();
-                        
-
-
-                            // if (response.data.images) {
-                            //     var image_url = path + response.data.images.key;
-                            //     //alert(image_url)
-                            //     $("#edit_photo".key).attr("data-height", 100);
-                            //     $("#edit_photo".key).attr("data-default-file", image_url);
-
-                            //     $('.program_image'.key).find('.dropify-wrapper').removeClass(
-                            //         "dropify-wrapper").addClass(
-                            //         "dropify-wrapper has-preview");
-                            //     $('.program_image'.key).find(".dropify-preview").css('display',
-                            //     'block');
-                            //     $('.program_image'.key).find('.dropify-render').html('').html(
-                            //         '<img src=" ' + image_url +
-                            //         '">')
-                            // } else {
-                            //     $('#edit_photo'.key).find(".dropify-preview .dropify-render img").attr(
-                            //         "src", " ");
-                            // }
-
-
+                            // $('.program_image' + key).dropify();
+                            $('.program_image' + key, value).dropify();
                         });
-                    // });
-
-                        /*Edit Image End*/
-
-                        // if (response.data.img_path) {
-                        //     var image_url = path + response.data.img_path;
-                        //     //alert(image_url)
-                        //     $("#e_asset").attr("data-height", 100);
-                        //     $("#e_asset").attr("data-default-file", image_url);
-
-                        //     $('.big_image1').find('.dropify-wrapper').removeClass("dropify-wrapper").addClass(
-                        //         "dropify-wrapper has-preview");
-                        //     $('.big_image1').find(".dropify-preview").css('display', 'block');
-                        //     $('.big_image1').find('.dropify-render').html('').html('<img src=" ' + image_url +
-                        //         '">')
-                        // } else {
-                        //     $('#e_asset').find(".dropify-preview .dropify-render img").attr("src", "");
-                        // }
 
                         $('#hidden_id').val(response.data.id);
                         $('#itemEditModal').modal('show');
@@ -871,7 +819,7 @@
                                     animation: true,
                                     title: "" + response.data.message + ""
                                 });
-        
+
                                 $('#itemTable').DataTable().row('.item' + response.data.id).remove()
                                     .draw();
                             } else {
