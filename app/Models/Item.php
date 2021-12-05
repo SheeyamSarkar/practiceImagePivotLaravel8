@@ -18,13 +18,8 @@ class Item extends Model
     }
     
     public function assets(){
-         return $this->belongsToMany(AssetType::class,'asset_items','item_id','asset_type_id')->withPivot('asset');
+         return $this->belongsToMany(AssetType::class,'asset_items','item_id','asset_type_id')->withPivot('id','asset');
     }
-
-    /*public function getAssetTypes(){
-         return $this->belongsToMany(AssetTypes::class);
-    }
-*/
 
     
 }

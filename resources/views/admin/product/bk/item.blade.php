@@ -49,8 +49,11 @@
                                                         </td>
                                                         <td>{{ $item->name }}</td>
                                                         <td>
-                                                            <img src="{{ asset('images/' . $item->image_path) }}"
-                                                                alt="item Image" style="height: 40px;width: 40px">
+                                                            @foreach ($item->assets as $aset)
+                                                                
+                                                                <img src="{{ asset('images/' . $aset->pivot->asset) }}"
+                                                                    alt="item Image" style="height: 40px;width: 40px">
+                                                            @endforeach
                                                         </td>
 
 
@@ -158,12 +161,14 @@
                             </div>
 
 
-                            <!-- Image Add Input Field Start -->
+                            <!-- Email Add Input Field Start -->
                             <div class="col-12 form-input">
-                                <span id="select_image_div">
-                                    <div class=' row image_row image_div0'>
+                                <span id="select_email_div">
+                                    <div class=' row email_row email_div0'>
                                         <div class="col-10 form-input">
                                             <label for="add_photo">Image</label>
+
+
                                             <div class="custom-file program_image0">
                                                 <input type="file" name="add_photo[]" id="add_photo"
                                                     class="custom-file-input dropify" data-errors-position="outside"
@@ -171,6 +176,10 @@
                                                     data-max-file-size="1.0M" data-height="200" data-width="200"
                                                     data-id='0'>
                                             </div>
+
+
+
+
                                             <span class="error_msg0 text-danger"></span>
                                         </div>
                                         <div class="col-2 form-input">
@@ -202,7 +211,8 @@
                                     </div>
                                 </span>
                             </div>
-                            <!-- Image Add Input Field End -->
+                            <!-- Email Add Input Field End -->
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -275,19 +285,20 @@
 
                             <div class="col-12 form-input">
                                 <label for="description">Description</label>
+
                                 <textarea name="description" class="form-control" id="description"
                                     placeholder="Add Description"></textarea>
                             </div>
 
 
-                            <!-- Edit Image Input Field Start -->
+                            <!-- Edit Email Input Field Start -->
                             <div class="col-12 form-input">
-                                <label for="image">Image</label>
-                                <span id="e_select_image_div">
+                                <label for="email">Email</label>
+                                <span id="e_select_email_div">
 
                                 </span>
                                 <div class="float-right">
-                                    <button class="btn btn-secondary add_new_row_btn_image_edit" type="button"
+                                    <button class="btn btn-secondary add_new_row_btn_email_edit" type="button"
                                         style="position: absolute; right: 10px;">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-plus-circle" viewBox="0 0 16 16">
@@ -300,7 +311,7 @@
                                 </div>
                             </div>
 
-                            <!-- Edit Image Input Field End -->
+                            <!-- Edit Email Input Field End -->
 
 
                         </div>
@@ -353,6 +364,8 @@
                         <div class="col-12">
                             <h6>Asset</h6>
                             <h5 id="v_asset"></h5>
+                            <h5 id="v_asset1"></h5>
+                            <h5 id="v_asset2"></h5>
                         </div>
                     </div>
                 </div>
@@ -385,7 +398,6 @@
                 update: "{!! route('item.update') !!}",
                 delete: "{!! route('item.destroy') !!}",
                 filter: "{!! route('filter') !!}",
-                delete_image: "{!! route('asset.delete') !!}",
 
             }
         };
@@ -403,9 +415,9 @@
         $(document).on('click', '.add_new_row_btn1', function() {
 
 
-            var image = $('.image_row').find('#add_photo' + i).val();
+            var email = $('.email_row').find('#email' + i).val();
 
-            if (image === '') {
+            if (email === '') {
 
                 $('.error_msg' + i).addClass('mt-1').text('This field is required');
                 $('.error_msg' + i).show();
@@ -414,7 +426,7 @@
                 var new_i = i - 1;
                 $('.error_msg' + new_i).hide();
 
-                $('.image_row:last').after(` <div class='row image_row image_div${i}' >
+                $('.email_row:last').after(` <div class='row email_row email_div${i}' >
                 <div class="col-10 form-input">
                     <div class="custom-file program_image${i}">
                         <input type="file" name="add_photo[]" id="add_photo${i}" class="custom-file-input dropify"
@@ -423,7 +435,8 @@
                     </div>
                     
                     
-                <span class="error_msg${i} text-danger"></span>
+                    
+                    <span class="error_msg${i} text-danger"></span>
                 </div>
                 <div class="col-2 form-input">
                     <div class=" remove_row${i}" onclick="remove(${i})" style="position: absolute; right: 0; padding-top:20px;">
@@ -435,36 +448,34 @@
                     </div>
                 </div>
             </div>`);
-                $('.program_image' + i).dropify();
             }
-
         });
 
 
 
         // While adding new data this code will remove new row
         function remove(id) {
-            var length = $('.image_row').length;
+            var length = $('.email_row').length;
             // alert(length)
             if (length === 1) {
-                $(".image_div" + id).empty();
+                $(".email_div" + id).empty();
             } else {
-                $(".image_div" + id).remove();
+                $(".email_div" + id).remove();
             }
         }
 
 
 
-        /*Edit Image Input Field End*/
+        /Edit Email Input Field End/
         // While editing existing data this code will generate new row after click add button
 
         // While editing existing data this code will generate new row after click add button if you necessary
         var j = 0;
-        $(document).on('click', '.add_new_row_btn_image_edit', function() {
+        $(document).on('click', '.add_new_row_btn_email_edit', function() {
 
-            var image = $('.image_row_edit').find('#edit_photo' + j).val();
+            var email = $('.email_row_edit').find('#edit_photo' + j).val();
 
-            if (image === '') {
+            if (email === '') {
 
                 $('.error_msg' + j).addClass('mt-1').text('This field is required');
                 $('.error_msg' + j).show();
@@ -472,24 +483,21 @@
                 ++j;
                 var new_j = j - 1;
                 $('.error_msg' + new_j).hide();
-                //alert('Image');
+                //alert('Email');
 
-                $('.image_row_edit:last').after(` <div class=' row image_row_edit image_edit_new${j}' >
+                $('.email_row_edit:last').after(` <div class=' row email_row_edit email_edit_new${j}' >
                 <div class="col-10 form-input">
                 <div class="custom-file program_image${j}">
-                                            <input type="file" name="edit_photo[]" id="edit_photo${j}"
-                                                class="custom-file-input dropify" data-errors-position="outside"
-                                                data-allowed-file-extensions='["jpg", "png","jpeg"]'
-                                                data-max-file-size="1.0M" data-height="200" data-width="200"
-                                                data-id='${j}'>
-                                        </div>
-                    
-
-
-                    <span class="error_msg${j} text-danger"></span>
+                    <input type="file" name="edit_photo[]" id="edit_photo${j}"
+                        class="custom-file-input dropify" data-errors-position="outside"
+                        data-allowed-file-extensions='["jpg", "png","jpeg"]'
+                        data-max-file-size="1.0M" data-height="200" data-width="200"
+                        data-id='${j}'>
+                </div>
+                <span class="error_msg${j} text-danger"></span>
                 </div>
                 <div class="col-2 form-input">
-                    <div class=" remove_row${j}" onclick="remove_image_edit_row(${j})" style="position: absolute; right: 0; padding-top:20px;">
+                    <div class=" remove_row${j}" onclick="remove_email_edit_row(${j})" style="position: absolute; right: 0; padding-top:20px;">
                         <button class="btn btn-secondary close_icon_add_form" type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
                                 <path fill="#BDBDBD" d="M13.41 12l6.3-6.29a1.004 1.004 0 10-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 00-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 000 1.42.998.998 0 001.42 0l6.29-6.3 6.29 6.3a.999.999 0 001.42 0 1 1 0 000-1.42L13.41 12z"/>
@@ -498,32 +506,31 @@
                     </div>
                 </div>
             </div>`);
-                $('.program_image' + j).dropify();
             }
         });
 
         //while editing if necessary this code will remove certain row from your existing rowdata
-        function remove_image_edit(id) {
-            var length = $('.image_row_edit').length;
+        function remove_email_edit(id) {
+            var length = $('.email_row_edit').length;
             // alert(length)
             if (length === 1) {
-                $(".image_div_edit" + id).empty();
+                $(".email_div_edit" + id).empty();
             } else {
-                $(".image_div_edit" + id).remove();
+                $(".email_div_edit" + id).remove();
             }
         }
 
         //while editing if necessary this code will remove certain row which you have created newely
-        function remove_image_edit_row(id) {
-            var length = $('.image_row_edit').length;
+        function remove_email_edit_row(id) {
+            var length = $('.email_row_edit').length;
             // alert(length)
             if (length === 1) {
-                $(".image_edit_new" + id).empty();
+                $(".email_edit_new" + id).empty();
             } else {
-                $(".image_edit_new" + id).remove();
+                $(".email_edit_new" + id).remove();
             }
         }
-        /*Edit Image Input Field End*/
+        /Edit Email Input Field End/
 
 
         // add form validation
@@ -612,12 +619,13 @@
                     if (response.success == true) {
                         var idea_table = $('#itemTable').DataTable();
                         var trDOM = idea_table.row.add([
-                            "" + response.data.category_name + "",
+                            "" + response.data.category_id + "",
                             "" + response.data.sub_category_id + "",
                             "" + response.data.name + "",
-                            "" +
-                            `<img width="40px" height="40px" src="${path+response.data.asset}" class="dropify"/>` +
-                            "",
+                            // "" + response.data.asset + "",
+                            $.each(response.data.asset, function(key, value) {
+                                `<img width="40px" height="40px" src="${path+value}" class="dropify"/>`;
+                                }),
                             "" + response.data.description + "",
 
                             `
@@ -655,8 +663,7 @@
         });
 
         //request end
-        var path = "{{ url('/') }}" + '/images/';
-
+        //var path = "{{ url('/') }}" + '/images/';
         function viewItem(id) {
 
             $.ajax({
@@ -669,17 +676,23 @@
                 dataType: "json",
                 success: function(response) {
                     if (response.success == true) {
+                        //var image_url = path + response.data.img_path;
 
                         $('#v_category_id').text(response.data.category_name);
                         $('#v_sub_category_id').text(response.data.get_sub_category.name);
                         $('#v_name').text(response.data.name);
                         $('#v_asset_type_id').text(response.data.type_name);
+                        //$("#v_asset").attr( response.data.img_path);
+                        // $.each(response.data.images, function(key, value) {
+                        //     $('#v_asset').html(
+                        //         `<img width="40px" height="40px" src="{!! URL::to('images/') !!}/${response.data.images}" class="dropify"/>`
+                        //     );
+                        // }
                         $('#v_asset').empty();
-                        $.each(response.data.Image_assets, function(key, value) {
-                            $('#v_asset').append(
-                                `<img src="${path+value.asset}" class="dropify" style="width:370px; height:200px; padding-bottom:10px;"/>`
-                                );
+                        $.each(response.data.images, function(key, value) {
+                        $('#v_asset').append(`<img width="40px" height="40px" src="${path+value}" class="dropify"/>`);
                         });
+
                         $('#v_description').text(response.data.description);
 
                         $('#itemViewModal').modal('show');
@@ -708,74 +721,82 @@
                 dataType: "json",
                 success: function(response) {
                     if (response.success == true) {
-
+                        //alert(response.data.name);
                         $('#e_category_id').val(response.data.get_sub_category.category_id);
                         $('#e_sub_category_id').val(response.data.sub_category_id);
                         $('#name').val(response.data.name);
-
+                        //$('#e_asset_type_id').val(response.data.asset_type_id);
                         $('#e_asset_type_id').val(response.data.type_id);
+                        //$('#e_asset').val(response.data.images);
                         $('#description').val(response.data.description);
 
-                        /*Edit Image Start  deleteimagerow()*/
-                        $('#e_select_image_div').empty();
-                         $.each(response.data.Image_assets, function(key, value) {
-                        
-                            $('#e_select_image_div').append(`<div class=' row image_row_edit image_div_edit${key}' >
-                            
-                            <img src="${path+value.asset}" class="dropify"style="width:370px; height:200px; padding-bottom:10px;"/>
+                        /Edit Email Start/
+                        $('#e_select_email_div').empty();
+                        $.each(response.data.images, function(key, value) {
+                            $('#e_select_email_div').append(`<div class=' row email_row_edit email_div_edit${key}' >
+                            <div class="col-10 form-input">
+                                <div class="custom-file program_image${key}">
+                                            <input type="file" name="image_old[${value}]" id="edit_photo${key}"
+                                                class="custom-file-input dropify" data-errors-position="outside"
+                                                data-allowed-file-extensions='["jpg", "png","jpeg"]' 
+                                                data-max-file-size="1.0M" data-height="200" data-width="200"
+                                                data-id='${key}' value="${value}" src="${path+value}">
+                                        </div>
+                                
+                                <span class="error_msg${key} text-danger"></span>
+                            </div>
                             <div class="col-2 form-input">
-
-                                <div class=" remove_row${value.id}" onclick="remove_image_edit(${key})" style="position: absolute; right: 0; padding-top:20px;">
-                                    <button onclick="deleteimagerow(${value.id})" class="btn btn-secondary close_icon_add_form" type="button">
+                                <div class=" remove_row${key}" onclick="remove_email_edit(${key})" style="position: absolute; right: 0; padding-top:20px;">
+                                    <button onclick="deleteEmailRow(${value.id})" class="btn btn-secondary close_icon_add_form" type="button">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
                                 <path fill="#BDBDBD" d="M13.41 12l6.3-6.29a1.004 1.004 0 10-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 00-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 000 1.42.998.998 0 001.42 0l6.29-6.3 6.29 6.3a.999.999 0 001.42 0 1 1 0 000-1.42L13.41 12z"></path></svg>
                                     </button>
                                 </div>
                             </div>
                         </div>`);
-                        $('.program_image' + key).dropify();
-                        
 
 
-                            // if (response.data.images) {
-                            //     var image_url = path + response.data.images.key;
-                            //     //alert(image_url)
-                            //     $("#edit_photo".key).attr("data-height", 100);
-                            //     $("#edit_photo".key).attr("data-default-file", image_url);
+                            if (response.data.images) {
+                                var image_url = path + response.data.images.key;
+                                //alert(image_url)
+                                $("#edit_photo".key).attr("data-height", 100);
+                                $("#edit_photo".key).attr("data-default-file", image_url);
 
-                            //     $('.program_image'.key).find('.dropify-wrapper').removeClass(
-                            //         "dropify-wrapper").addClass(
-                            //         "dropify-wrapper has-preview");
-                            //     $('.program_image'.key).find(".dropify-preview").css('display',
-                            //     'block');
-                            //     $('.program_image'.key).find('.dropify-render').html('').html(
-                            //         '<img src=" ' + image_url +
-                            //         '">')
-                            // } else {
-                            //     $('#edit_photo'.key).find(".dropify-preview .dropify-render img").attr(
-                            //         "src", " ");
-                            // }
+                                $('.program_image'.key).find('.dropify-wrapper').removeClass(
+                                    "dropify-wrapper").addClass(
+                                    "dropify-wrapper has-preview");
+                                $('.program_image'.key).find(".dropify-preview").css('display',
+                                'block');
+                                $('.program_image'.key).find('.dropify-render').html('').html(
+                                    '<img src=" ' + image_url +
+                                    '">')
+                            } else {
+                                $('#edit_photo'.key).find(".dropify-preview .dropify-render img").attr(
+                                    "src", " ");
+                            }
 
 
                         });
-                    // });
 
-                        /*Edit Image End*/
+                        /Edit Email End/
 
-                        // if (response.data.img_path) {
-                        //     var image_url = path + response.data.img_path;
-                        //     //alert(image_url)
-                        //     $("#e_asset").attr("data-height", 100);
-                        //     $("#e_asset").attr("data-default-file", image_url);
+                        if (response.data.img_path) {
+                            var image_url = path + response.data.img_path;
+                            //alert(image_url)
+                            $("#e_asset").attr("data-height", 100);
+                            $("#e_asset").attr("data-default-file", image_url);
 
-                        //     $('.big_image1').find('.dropify-wrapper').removeClass("dropify-wrapper").addClass(
-                        //         "dropify-wrapper has-preview");
-                        //     $('.big_image1').find(".dropify-preview").css('display', 'block');
-                        //     $('.big_image1').find('.dropify-render').html('').html('<img src=" ' + image_url +
-                        //         '">')
-                        // } else {
-                        //     $('#e_asset').find(".dropify-preview .dropify-render img").attr("src", "");
-                        // }
+                            $('.big_image1').find('.dropify-wrapper').removeClass("dropify-wrapper").addClass(
+                                "dropify-wrapper has-preview");
+                            $('.big_image1').find(".dropify-preview").css('display', 'block');
+                            $('.big_image1').find('.dropify-render').html('').html('<img src=" ' + image_url +
+                                '">')
+                        } else {
+                            $('#e_asset').find(".dropify-preview .dropify-render img").attr("src", "");
+                        }
+
+
+
 
                         $('#hidden_id').val(response.data.id);
                         $('#itemEditModal').modal('show');
@@ -801,12 +822,14 @@
 
                         if (response.success == true) {
                             $('.item' + response.data.id).replaceWith(`<tr class='item${response.data.id}'>
-                            <td>${response.data.category_name}</td>
+                            <td>${response.data.category_id}</td>
                             <td>${response.data.sub_category_id}</td>
                            
-                            <td>${response.data.name}</td>
-                            <td><img width="40px" height="40px" src="${path+response.data.image_list[0]}" class="dropify"/></td>
+                            <td>${response.data.asset_type_id}</td>
                             <td>${response.data.description}</td>
+                            <td><img class="img-fluid" src="${path +'/'+response.data.img_path}" style="width: 40px; height: 40px;"></td>
+                            <td><img class="img-fluid" src="${path +'/'+response.data.img_path1}" style="width: 40px; height: 40px;"></td>
+                            <td><img class="img-fluid" src="${path +'/'+response.data.img_path2}" style="width: 40px; height: 40px;"></td>
                             <td class="actionBtn text-center">
                             <button  onclick='viewItem(${response.data.id})'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="#BDBDBD" d="M21.92 11.6C19.9 6.91 16.1 4 12 4s-7.9 2.91-9.92 7.6a1 1 0 000 .8C4.1 17.09 7.9 20 12 20s7.9-2.91 9.92-7.6a1 1 0 000-.8zM12 18c-3.17 0-6.17-2.29-7.9-6C5.83 8.29 8.83 6 12 6s6.17 2.29 7.9 6c-1.73 3.71-4.73 6-7.9 6zm0-10a4 4 0 100 8 4 4 0 000-8zm0 6a2 2 0 110-4 2 2 0 010 4z" /></svg>
                             </button>
@@ -871,7 +894,7 @@
                                     animation: true,
                                     title: "" + response.data.message + ""
                                 });
-        
+                                // swal("Done!", response.data.message, "success");
                                 $('#itemTable').DataTable().row('.item' + response.data.id).remove()
                                     .draw();
                             } else {
@@ -886,6 +909,7 @@
         function selectCategory() {
             var category_id = $('#category_id').val();
             //alert(category_id);
+
             $.ajax({
                 url: config.routes.filter,
                 type: "POST",
@@ -907,28 +931,5 @@
         }
 
         //end
-
-        function deleteimagerow(id) {
-
-            //alert(id);
-            $.ajax({
-                type: "POST",
-                url: config.routes.delete_image,
-                data: {
-                    id: id,
-                    _token: "{{ csrf_token() }}"
-                },
-                dataType: 'JSON',
-                success: function(response) {
-                    if (response.success === true) {
-
-                        $('#itemTable').DataTable().row('.item' + response.data.id).remove()
-                            .draw();
-                    } else {
-                        Swal.fire("Error!", "Can't delete item", "error");
-                    }
-                }
-            });
-        }
     </script>
 @endsection

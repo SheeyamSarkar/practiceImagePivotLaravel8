@@ -93,9 +93,10 @@ Route::post('/asset/store', [AssetTypeController::class, 'assetStore'])->name('a
 Route::post('/asset/edit', [AssetTypeController::class, 'assetEdit'])->name('asset.edit');
 Route::post('/asset/update', [AssetTypeController::class, 'assetUpdate'])->name('asset.update');
 Route::post('/asset/destroy', [AssetTypeController::class, 'assetDelete'])->name('asset.destroy');
+Route::post('/item/delete/image', [ItemController::class, 'deleteImage'])->name('asset.delete');
 /*AssetType End*/
 
-
+// Route::post('/item/deleteimagerow1', [ItemController::class, ''])->name('item.deleteimagerow');
 
 });
 
