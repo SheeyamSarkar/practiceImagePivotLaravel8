@@ -20,7 +20,7 @@ class ItemController extends Controller
         $subcategories = SubCategory::all();
         $categories = Category::all();
         $assets = AssetType::all();
-        
+        //dd($items);
         $catid = [];
         
         foreach ($items as  $item) {
@@ -32,10 +32,14 @@ class ItemController extends Controller
 
             $itemcatname = Category::whereIn('id', $catid)->get();
             //Category Name Fetch
+            $cat_name=[];
             foreach ($itemcatname as  $itemcat) {
                 $item->catname = $itemcat->name;
+                $item['item_name']=$item->catname;
 
             }
+            //dd($cat_name);
+
             
             //Image Fetch
             foreach($item->assets as $assets_pivot){
@@ -44,7 +48,7 @@ class ItemController extends Controller
             $item['image_path']=$image_path;
         }
         //dd($item->catname);
-        //dd($item);
+        
 
 
         return view('admin.product.item', compact('categories', 'subcategories', 'items', 'assets'));
@@ -136,8 +140,14 @@ class ItemController extends Controller
             $typeid = $item1->id;
             $typename = $item1->name;
         }
-        $cid = $item->getSubCategory->category_id;
 
+        //dd($item);
+        //category Id
+        $cid = $item->getSubCategory->category_id;
+        //dd($cid);
+
+        $sub_cat=SubCategory:: where('category_id', $cid)->get();
+        //dd($sub_cat);
         $catname = Category::where('id', '=', $cid)->first();
 
         $image_infos=AssetItem::where('item_id',$request->id)->get();
@@ -146,6 +156,7 @@ class ItemController extends Controller
         $item['type_name'] = $typename;
         $item['type_id'] = $typeid;
         $item['Image_assets']=$image_infos;
+        $item['sub_cat']=$sub_cat;
 
         
         if ($item) {

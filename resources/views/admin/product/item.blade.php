@@ -175,7 +175,7 @@
                                         <div class="col-2 form-input">
                                             <div class=" remove_row0" onclick="remove(0)" style="padding-top:20px;">
                                                 <button class="btn btn-secondary close_icon_add_form" type="button"
-                                                    style="position: absolute;right: 45px;margin-top: 35px;">
+                                                    style="position: absolute;right: 10px;margin-top: 35px;">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                         fill="none" viewBox="0 0 24 24">
                                                         <path fill="#BDBDBD"
@@ -233,7 +233,7 @@
                         <div class="row">
                             <div class="col-12 form-input">
                                 <label for="category_id">Category</label>
-                                <select name="category_id" id="e_category_id" class="form-control">
+                                <select name="e_category_id" id="e_category_id" class="form-control" onchange="editselectCategory()">
                                     <option value="">Select</option>
                                     @if (!empty($categories))
                                         @foreach ($categories as $category)
@@ -245,7 +245,7 @@
 
                             <div class="col-12 form-input">
                                 <label for="sub_category_id">Sub Category</label>
-                                <select name="sub_category_id" id="e_sub_category_id" class="form-control">
+                                <select name="e_sub_category_id" id="e_sub_category_id" class="form-control">
                                     <option value="">Select</option>
                                     @if (!empty($subcategories))
                                         @foreach ($subcategories as $subcategory)
@@ -699,7 +699,16 @@
                     if (response.success == true) {
 
                         $('#e_category_id').val(response.data.get_sub_category.category_id);
+                        // $('#e_sub_category_id').val(response.data.sub_category_id);
+                        $('select[name="e_sub_category_id"]').empty();
+                        $('select[name="e_sub_category_id"]').append('<option value="">Select</option>');
+                        $.each(response.data.sub_cat, function(key, value) {
+                            $('select[name="e_sub_category_id"]').append('<option value="' + value.id + '">' +
+                                value.name + '</option>');
+                        });
                         $('#e_sub_category_id').val(response.data.sub_category_id);
+
+
                         $('#name').val(response.data.name);
 
                         $('#e_asset_type_id').val(response.data.type_id);
@@ -848,6 +857,28 @@
                     $('select[name="sub_category_id"]').append('<option value="">Select</option>');
                     $.each(result, function(key, value) {
                         $('select[name="sub_category_id"]').append('<option value="' + value.id + '">' +
+                            value.name + '</option>');
+                    });
+                }
+            })
+        }
+        function editselectCategory() {
+            var category_id = $('#e_category_id').val();
+            //alert(category_id);
+            $.ajax({
+                url: config.routes.filter,
+                type: "POST",
+                data: {
+                    category_id: category_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                dataType: 'json',
+                success: function(result) {
+
+                    $('select[name="e_sub_category_id"]').empty();
+                    $('select[name="e_sub_category_id"]').append('<option value="">Select</option>');
+                    $.each(result, function(key, value) {
+                        $('select[name="e_sub_category_id"]').append('<option value="' + value.id + '">' +
                             value.name + '</option>');
                     });
                 }
